@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\Book;
 class BookController extends Controller
 {
     /**
@@ -11,7 +11,8 @@ class BookController extends Controller
      */
     public function index()
     {
-        //
+        $books = Book::all();
+        return view('books.index', compact('books'));
     }
 
     /**
@@ -19,7 +20,7 @@ class BookController extends Controller
      */
     public function create()
     {
-        //
+        return view('books.create');
     }
 
     /**
@@ -28,6 +29,12 @@ class BookController extends Controller
     public function store(Request $request)
     {
         //
+        $book = new Book;
+        $book->title = $request->input('title');
+        $book->author = $request->input('author');
+        $book->publication_date = $request->input('publication_date');
+        $book->save();
+        return redirect()->route('books.index');
     }
 
     /**
@@ -41,24 +48,29 @@ class BookController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Book $book)
     {
-        //
+        return view('books.edit', compact('book'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Book $book)
     {
-        //
+        $book->title = $request->input('title');
+        $book->author = $request->input('author');
+        $book->publication_date = $request->input('publication_date');
+        $book->save();
+        return redirect()->route('books.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Book $book)
     {
-        //
+        $book->delete();
+        return redirect()->route('books.index');
     }
 }
