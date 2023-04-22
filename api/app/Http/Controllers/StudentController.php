@@ -13,7 +13,7 @@ class StudentController extends Controller
     public function index()
     {
         $students = Student::all();
-        return view('students.index', compact('students'));
+        return $students;
     }
 
     public function create()
@@ -28,9 +28,15 @@ class StudentController extends Controller
         $student->email = $request->input('email');
         $student->password = bcrypt($request->input('password'));
         $student->save();
-        return redirect()->route('students.index');
+
     }
 
+    public function show(string $id)
+    {
+        //buscar el estudiante por id
+        $student = Student::find($id);
+        return $student;
+    }
     public function edit(Student $student)
     {
         return view('students.edit', compact('student'));
@@ -38,17 +44,18 @@ class StudentController extends Controller
 
     public function update(Request $request, Student $student)
     {
+        $student = Student::findorFail($student->id);
         $student->name = $request->input('name');
         $student->email = $request->input('email');
         $student->password = bcrypt($request->input('password'));
         $student->save();
-        return redirect()->route('students.index');
+        return $student;
     }
 
-    public function destroy(Student $student)
+    public function destroy($id)
     {
-        $student->delete();
-        return redirect()->route('students.index');
+        $student = Student::destroy($id);
+        return $student;
     }
 
 }

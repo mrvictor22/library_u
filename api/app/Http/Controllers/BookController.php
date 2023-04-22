@@ -12,7 +12,7 @@ class BookController extends Controller
     public function index()
     {
         $books = Book::all();
-        return view('books.index', compact('books'));
+        return $books;
     }
 
     /**
@@ -34,7 +34,7 @@ class BookController extends Controller
         $book->author = $request->input('author');
         $book->publication_date = $request->input('publication_date');
         $book->save();
-        return redirect()->route('books.index');
+
     }
 
     /**
@@ -43,6 +43,8 @@ class BookController extends Controller
     public function show(string $id)
     {
         //
+        $book = Book::find($id);
+        return $book;
     }
 
     /**
@@ -56,21 +58,22 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Book $book)
+    public function update(Request $request, Book $book, $id)
     {
+        $book = Book::findorFail($id);
         $book->title = $request->input('title');
         $book->author = $request->input('author');
         $book->publication_date = $request->input('publication_date');
         $book->save();
-        return redirect()->route('books.index');
+        return $book;
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Book $book)
+    public function destroy(Book $book, $id)
     {
-        $book->delete();
-        return redirect()->route('books.index');
+        $book = Book::destroy($id);
+        return $book;
     }
 }
