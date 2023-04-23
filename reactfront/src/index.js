@@ -1,18 +1,45 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+//importar nuestros componentes
+import ShowStudents from './components/ShowStudents';
+import App from './App';
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+function Index() {
+    return (
+        <div className="App">
+            <BrowserRouter>
+                <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                    <div className="container-fluid">
+                        <Link className="navbar-brand" to="/">Library</Link>
+                        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span className="navbar-toggler-icon"></span>
+                        </button>
+                        <div className="collapse navbar-collapse" id="navbarNav">
+                            <ul className="navbar-nav">
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/">Home</Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/students">Students</Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/create">Create</Link>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                <Routes>
+                    <Route path='/' element={<App />} />
+                    <Route path='/students' element={<ShowStudents />} />
+                    <Route path='/create' element={<h1>Create new student form</h1>} />
+                </Routes>
+            </BrowserRouter>
+        </div>
+    );
+}
+
+export default Index;
