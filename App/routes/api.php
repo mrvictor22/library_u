@@ -34,4 +34,5 @@ Route::group(['prefix' => 'students'], function () {
     Route::post('/', [StudentController::class, 'store']);
     Route::put('/{id}', [StudentController::class, 'update']);
     Route::delete('/{id}', [StudentController::class, 'destroy']);
+
 });

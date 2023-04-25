@@ -28,14 +28,21 @@ class StudentController extends Controller
         $student->email = $request->input('email');
         $student->password = bcrypt($request->input('password'));
         $student->save();
-
+        return response()->json([
+            'message' => 'Student created successfully',
+            'book' => $student
+        ], 201);
     }
 
     public function show(string $id)
     {
         //buscar el estudiante por id
         $student = Student::find($id);
-        return $student;
+        if ($student) {
+            return response()->json($student);
+        } else {
+            return response()->json(['message' => 'Student not found'], 404);
+        }
     }
     public function edit(Student $student)
     {
@@ -45,17 +52,26 @@ class StudentController extends Controller
     public function update(Request $request, Student $student)
     {
         $student = Student::findorFail($student->id);
-        $student->name = $request->input('name');
-        $student->email = $request->input('email');
-        $student->password = bcrypt($request->input('password'));
-        $student->save();
-        return $student;
+        if ($student){
+            $student->name = $request->input('name');
+            $student->email = $request->input('email');
+            $student->password = bcrypt($request->input('password'));
+            $student->save();
+            return response()->json(['message' => 'Student updated successfully', 'book' => $student], 200);
+        } else {
+            return response()->json(['message' => 'Student not found'], 404);
+        }
+
     }
 
     public function destroy($id)
     {
         $student = Student::destroy($id);
-        return $student;
+        if($student){
+            return response()->json(['message' => 'Student deleted successfully'], 200);
+        } else {
+            return response()->json(['message' => 'Student not found'], 404);
+        }
     }
 
 }
