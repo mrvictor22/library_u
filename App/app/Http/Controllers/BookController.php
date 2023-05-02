@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Book;
+use App\Models\BookLoan;
 class BookController extends Controller
 {
     /**
@@ -48,16 +50,19 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($query)
     {
-        //
-        $book = Book::find($id);
+        $book = Book::where('title', 'like', '%'.$query.'%')
+            ->orWhere('author', 'like', '%'.$query.'%')
+            ->orWhere('isbn', 'like', '%'.$query.'%')
+            ->first();
         if ($book) {
             return response()->json($book);
         } else {
             return response()->json(['message' => 'Book not found'], 404);
         }
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -98,5 +103,36 @@ class BookController extends Controller
         } else {
             return response()->json(['message' => 'Book not found'], 404);
         }
+    }
+
+    public function lendBook(Request $request)
+    {
+        $bookId = $request->input('book_id');
+        $studentId = $request->input('student_id');
+
+        $book = Book::find($bookId);
+
+        if (!$book) {
+            return response()->json(['message' => 'Book not found'], 404);
+        }
+
+        if ($book->quantity <= 0) {
+            return response()->json(['message' => 'No copies available'], 400);
+        }
+
+        $loan = new BookLoan;
+        $loan->book_id = $bookId;
+        $loan->student_id = $studentId;
+        $loan->due_date = Carbon::now();
+        $loan->returned_date = Carbon::now()->addDays(14);
+        $loan->save();
+
+        $book->quantity--;
+        $book->save();
+
+        return response()->json([
+            'message' => 'Book lent successfully',
+            'book_loan' => $loan
+        ], 200);
     }
 }

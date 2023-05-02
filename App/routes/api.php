@@ -22,10 +22,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'books'], function () {
     Route::get('/', [BookController::class, 'index']);
-    Route::get('/{id}', [BookController::class, 'show']);
+    Route::get('{search}', [BookController::class, 'show']);
     Route::post('/', [BookController::class, 'store']);
     Route::put('/{id}', [BookController::class, 'update']);
     Route::delete('/{id}', [BookController::class, 'destroy']);
+    Route::post('/lend', [BookController::class, 'lendBook']);
+
 });
 
 Route::group(['prefix' => 'students'], function () {
