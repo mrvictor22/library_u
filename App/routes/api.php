@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\StudentController;
-
+use Laravel\Passport\Http\Controllers\AccessTokenController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -38,3 +38,6 @@ Route::group(['prefix' => 'students'], function () {
     Route::delete('/{id}', [StudentController::class, 'destroy']);
 
 });
+
+Route::post('oauth/token', [AccessTokenController::class, 'issueToken'])
+    ->middleware(['api-login']);
